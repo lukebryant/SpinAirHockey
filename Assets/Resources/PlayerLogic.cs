@@ -13,6 +13,7 @@ public class PlayerLogic : MonoBehaviour {
 	private Vector2 differenceVector;
 	private bool clockwise;
 	public int id;
+    public bool anchored = false;
 	private bool active = false;
 
 	// Use this for initialization
@@ -22,7 +23,7 @@ public class PlayerLogic : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (anchorTransform ==null) return;
+        if (anchorTransform ==null || !anchored) return;
         differenceVector = anchorTransform.position - this.transform.position;
 		perpVector = new Vector2 (-differenceVector.y, differenceVector.x);
 		perpVector.Normalize ();

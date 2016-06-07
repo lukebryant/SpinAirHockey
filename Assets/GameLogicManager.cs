@@ -50,6 +50,7 @@ public class GameLogicManager : MonoBehaviour {
     public void setCurrentAnchor(int id)
     {
         playerLogics[selectedPlayerId].setCurrentAnchor(anchors[id].transform);
+        playerLogics[selectedPlayerId].anchored = true;
     }
     // Update is called once per frame
     void Update () {
@@ -57,6 +58,7 @@ public class GameLogicManager : MonoBehaviour {
         if (Input.GetKeyDown("1")) setActivePlayer(1);
         if (Input.GetKeyDown("2")) setActivePlayer(2);
         if (Input.GetKeyDown("3")) setActivePlayer(3);
+        if (Input.GetMouseButtonDown(1)) playerLogics[selectedPlayerId].anchored = false;
     }
 
     void setActivePlayer(int id)
