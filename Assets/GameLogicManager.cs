@@ -7,16 +7,14 @@ public class GameLogicManager : MonoBehaviour {
     [SerializeField]
     private int numPlayers;
     [SerializeField]
-    private GameObject playerPrefab;
+    private GameObject cueBallPrefab;
     [SerializeField]
     private const int numAnchors = 10;
     [SerializeField]
-    private GameObject currentAnchor;
-    [SerializeField]
     private float anchorEdgeFactor = 0.6f; //
     private List<GameObject> anchors = new List<GameObject>();
-    private List<GameObject> players = new List<GameObject>();
-    private List<PlayerLogic> playerLogics = new List<PlayerLogic>();
+    private List<GameObject> cueBalls = new List<GameObject>();
+    private List<CueBallLogic> cueBallLogics = new List<CueBallLogic>();
     private int selectedPlayerId;
     private Canvas canvas;
 
@@ -26,14 +24,14 @@ public class GameLogicManager : MonoBehaviour {
         canvas = GetComponentInParent<Canvas>();
         for (int i = 0; i < numPlayers; i++)
         {
-            GameObject player = (GameObject)Instantiate((Object)playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            player.transform.SetParent(canvas.transform);
+            GameObject cueBall = (GameObject)Instantiate((Object)cueBallPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            cueBall.transform.SetParent(canvas.transform);
             Vector2 spawnPosition = new Vector2(0,0);
-            player.transform.localPosition = spawnPosition;
-            PlayerLogic playerLogic = player.GetComponent<PlayerLogic>();
-            playerLogic.id = i;
-            players.Add(player);
-            playerLogics.Add(playerLogic);
+            cueBall.transform.localPosition = spawnPosition;
+            CueBallLogic cueBallLogic = cueBall.GetComponent<CueBallLogic>();
+            cueBallLogic.id = i;
+            cueBalls.Add(cueBall);
+            cueBallLogics.Add(cueBallLogic);
         }
         for (int i = 0; i < numAnchors; i++)
         {
@@ -49,8 +47,8 @@ public class GameLogicManager : MonoBehaviour {
 
     public void setCurrentAnchor(int id)
     {
-        playerLogics[selectedPlayerId].setCurrentAnchor(anchors[id].transform);
-        playerLogics[selectedPlayerId].anchored = true;
+        cueBallLogics[selectedPlayerId].setCurrentAnchor(anchors[id].transform);
+        cueBallLogics[selectedPlayerId].anchored = true;
     }
     // Update is called once per frame
     void Update () {
@@ -58,15 +56,15 @@ public class GameLogicManager : MonoBehaviour {
         if (Input.GetKeyDown("1")) setActivePlayer(1);
         if (Input.GetKeyDown("2")) setActivePlayer(2);
         if (Input.GetKeyDown("3")) setActivePlayer(3);
-        if (Input.GetMouseButtonDown(1)) playerLogics[selectedPlayerId].anchored = false;
+        if (Input.GetMouseButtonDown(1)) cueBallLogics[selectedPlayerId].anchored = false;
     }
 
     void setActivePlayer(int id)
     {
         selectedPlayerId = id;
-        for (int i = 0; i < players.Count; i++)
+        for (int i = 0; i < cueBalls.Count; i++)
         {
-            playerLogics[i].setActive(true ? i == id : false);
+            cueBallLogics[i].setActive(true ? i == id : false);
         }
     }
 }

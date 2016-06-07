@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class PlayerLogic : MonoBehaviour {
+public class CueBallLogic : MonoBehaviour {
 	public List<GameObject> anchors = new List<GameObject> ();
-	//private GameObject currentAnchor;
 	private Image circleImage;
 	private Transform anchorTransform;
     private Rigidbody2D rigidBody2d;
@@ -35,7 +34,6 @@ public class PlayerLogic : MonoBehaviour {
 
 	public void setCurrentAnchor(Transform newAnchorTransform){
 		if (active) {
-			//currentAnchor = anchors [id];
 			anchorTransform = newAnchorTransform;
 			differenceVector = newAnchorTransform.position - this.transform.position;
 			float angle = Vector2.Angle (perpVector, differenceVector);

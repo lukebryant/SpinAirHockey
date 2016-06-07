@@ -3,7 +3,7 @@ using System.Collections;
 
 public class AnchorLogic : MonoBehaviour {
 	public int id;
-	public PlayerLogic playerLogic;
+	public CueBallLogic cueBallLogic;
     private GameLogicManager gameLogicManager;
 
     // Use this for initialization
