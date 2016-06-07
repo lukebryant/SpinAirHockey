@@ -7,7 +7,8 @@ public class PlayerLogic : MonoBehaviour {
 	//private GameObject currentAnchor;
 	private Image circleImage;
 	private Transform anchorTransform;
-	private Vector2 scaleVector = new Vector2(2f,2f);
+    private Rigidbody2D rigidBody2d;
+	private Vector2 scaleVector = new Vector2(100f,100f);
 	private Vector2 perpVector = new Vector2(1f,1f);
 	private Vector2 differenceVector;
 	private bool clockwise;
@@ -16,23 +17,19 @@ public class PlayerLogic : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-	}
+        rigidBody2d = GetComponent<Rigidbody2D>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
         if (anchorTransform ==null) return;
-		//if (Input.GetKeyDown("0")) active = true ? id == 0 : false;
-		// (Input.GetKeyDown("1")) active = true ? id == 1 : false;
-        // (Input.GetKeyDown("2")) active = true ? id == 2 : false;
-        // (Input.GetKeyDown("3")) active = true ? id == 3 : false;
         differenceVector = anchorTransform.position - this.transform.position;
 		perpVector = new Vector2 (-differenceVector.y, differenceVector.x);
 		perpVector.Normalize ();
 		perpVector.Scale (scaleVector);
 		if (!clockwise)
 			perpVector *= -1;
-		transform.position += (Vector3)perpVector;	
+        rigidBody2d.velocity = (Vector3)perpVector;	
 	} 
 
 	public void setCurrentAnchor(Transform newAnchorTransform){
