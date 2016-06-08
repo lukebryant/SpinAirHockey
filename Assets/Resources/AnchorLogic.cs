@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+
 
 public class AnchorLogic : MonoBehaviour {
 	public int id;
 	public CueBallLogic cueBallLogic;
     private GameLogicManager gameLogicManager;
+    private PlayerController playerController;
 
     // Use this for initialization
-	void Start () {
-        gameLogicManager = GameObject.Find("GameManager").GetComponent<GameLogicManager>();
-	
-	}
+    void Start() { 
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -18,6 +19,11 @@ public class AnchorLogic : MonoBehaviour {
 	}
 
 	public void OnClick() {
-		gameLogicManager.setCurrentAnchor (id);
+		playerController.CmdSetCurrentAnchor(id);
 	}
+
+    public void givePlayerControllerReference(PlayerController newPlayerController)
+    {
+        playerController = newPlayerController;
+    }
 }
