@@ -17,6 +17,10 @@ public class CueBallLogic : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        if (GetComponentInParent<Canvas>() == null)      //Spawned objects aren't put on the canvas, so this will happen on clients
+        {
+            this.transform.SetParent(GameObject.Find("Canvas").transform);
+        }
         rigidBody2d = GetComponent<Rigidbody2D>();
     }
 	
