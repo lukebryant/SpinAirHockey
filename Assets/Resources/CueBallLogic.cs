@@ -13,7 +13,6 @@ public class CueBallLogic : MonoBehaviour {
 	private bool clockwise;
 	public int id;
     public bool anchored = false;
-	private bool active = false;
 
 	// Use this for initialization
 	void Start () {
@@ -37,21 +36,12 @@ public class CueBallLogic : MonoBehaviour {
 	} 
 
 	public void setCurrentAnchor(Transform newAnchorTransform){
-		if (active) {
-			anchorTransform = newAnchorTransform;
-			differenceVector = newAnchorTransform.position - this.transform.position;
-			float angle = Vector2.Angle (perpVector, differenceVector);
-			Vector3 cross = Vector3.Cross (perpVector, differenceVector);
-			if (cross.z > 0)
-				angle = 0 - angle;
-			clockwise = true ? angle > 0 : false;
-    
-		}
+		anchorTransform = newAnchorTransform;
+		differenceVector = newAnchorTransform.position - this.transform.position;
+		float angle = Vector2.Angle (perpVector, differenceVector);
+		Vector3 cross = Vector3.Cross (perpVector, differenceVector);
+		if (cross.z > 0)
+			angle = 0 - angle;
+		clockwise = true ? angle > 0 : false;
 	}
-
-    public void setActive(bool newActive)
-    {
-        active = newActive;
-        if(active)print(id + " active");
-    }
 }

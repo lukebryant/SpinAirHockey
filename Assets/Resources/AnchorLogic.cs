@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Networking;
 
 
-public class AnchorLogic : MonoBehaviour {
+public class AnchorLogic : NetworkBehaviour {
+    [SyncVar]
 	public int id;
 	public CueBallLogic cueBallLogic;
     private GameLogicManager gameLogicManager;
@@ -23,7 +25,7 @@ public class AnchorLogic : MonoBehaviour {
 	}
 
 	public void OnClick() {
-		playerController.CmdSetCurrentAnchor(id);
+		playerController.CmdSetCurrentAnchor(id, playerController.getPlayerId());
 	}
 
     public void givePlayerControllerReference(PlayerController newPlayerController)

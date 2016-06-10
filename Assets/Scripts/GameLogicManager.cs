@@ -7,17 +7,18 @@ using UnityEngine.Networking;
 public class GameLogicManager : NetworkBehaviour
 { 
     [SerializeField]
-    private int numPlayers;
+    private int numCueBallsPerPlayer;
     [SerializeField]
     private GameObject cueBallPrefab;
     [SerializeField]
     private const int numAnchors = 10;
     [SerializeField]
     private float anchorEdgeFactor = 0.6f; //
+    private static int numPlayers = 2;
     private List<GameObject> anchors = new List<GameObject>();
-    private List<GameObject> cueBalls = new List<GameObject>();
-    private List<CueBallLogic> cueBallLogics = new List<CueBallLogic>();
-    private int selectedPlayerId;
+    private List<GameObject>[] gameCueBalls = new List<GameObject>[numPlayers];  //Array of all the lists of cueBalls in the game where gameCueBalls[0] is a list of player 0's cueBalls
+    private List<CueBallLogic>[] gameCueBallLogics = new List<CueBallLogic>[numPlayers];
+    private int[] selectedCueBallIds = {0,0};     //Player n's selected cueBall
     private Canvas canvas;
 
 
@@ -26,18 +27,23 @@ public class GameLogicManager : NetworkBehaviour
         Vector2 spawnPosition;
         if (!isServer) return;
         canvas = GetComponentInParent<Canvas>();
-        for (int i = 0; i < numPlayers; i++)
+        for (int j = 0; j < numPlayers; j++)
         {
-            GameObject cueBall = (GameObject)Instantiate((Object)cueBallPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            cueBall.transform.SetParent(canvas.transform);
-            spawnPosition = new Vector2(0,0);
-            cueBall.transform.localPosition = spawnPosition;
-            CueBallLogic cueBallLogic = cueBall.GetComponent<CueBallLogic>();
-            cueBallLogic.id = i;
-            cueBall.GetComponentInChildren<Text>().text = i.ToString();
-            cueBalls.Add(cueBall);
-            cueBallLogics.Add(cueBallLogic);
-            NetworkServer.Spawn(cueBall);
+            gameCueBalls[j] = new List<GameObject>();
+            gameCueBallLogics[j] = new List<CueBallLogic>();
+            for (int i = 0; i < numCueBallsPerPlayer; i++)
+            {
+                GameObject cueBall = (GameObject)Instantiate((Object)cueBallPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                cueBall.transform.SetParent(canvas.transform);
+                spawnPosition = new Vector2(0, 0);
+                cueBall.transform.localPosition = spawnPosition;
+                CueBallLogic cueBallLogic = cueBall.GetComponent<CueBallLogic>();
+                cueBallLogic.id = i;
+                cueBall.GetComponentInChildren<Text>().text = i.ToString();
+                gameCueBalls[j].Add(cueBall);
+                gameCueBallLogics[j].Add(cueBallLogic);
+                NetworkServer.Spawn(cueBall);
+            }
         }
         for (int i = 0; i < numAnchors; i++)
         {
@@ -57,10 +63,10 @@ public class GameLogicManager : NetworkBehaviour
         NetworkServer.Spawn(goalBall);
     }
 
-    public void setCurrentAnchor(int id)
+    public void setCurrentAnchor(int id, int player)
     {
-        cueBallLogics[selectedPlayerId].setCurrentAnchor(anchors[id].transform);
-        cueBallLogics[selectedPlayerId].anchored = true;
+        gameCueBallLogics[player][selectedCueBallIds[player]].setCurrentAnchor(anchors[id].transform);
+        gameCueBallLogics[player][selectedCueBallIds[player]].anchored = true;
     }
     // Update is called once per frame
     void Update () {
@@ -71,32 +77,29 @@ public class GameLogicManager : NetworkBehaviour
         if (Input.GetMouseButtonDown(1)) cueBallLogics[selectedPlayerId].anchored = false;*/
     }
 
-    void setActiveCueBall(int id)
+    void setActiveCueBall(int id, int player)
     {
-        selectedPlayerId = id;
-        for (int i = 0; i < cueBalls.Count; i++)
-        {
-            cueBallLogics[i].setActive(true ? i == id : false);
-        }
+        selectedCueBallIds[player] = id;
+        print("selectedCueBallIds[" + player + "] = " + id);
     }
 
-    public void Input(InputType inputType)
+    public void Input(InputType inputType, int player)
     {
         switch(inputType){
             case InputType.N0:
-                setActiveCueBall(0);
+                setActiveCueBall(0, player);
                 break;
             case InputType.N1:
-                setActiveCueBall(1);
+                setActiveCueBall(1, player);
                 break;
             case InputType.N2:
-                setActiveCueBall(2);
+                setActiveCueBall(2, player);
                 break;
             case InputType.N3:
-                setActiveCueBall(3);
+                setActiveCueBall(3, player);
                 break;
             case InputType.M1:
-                cueBallLogics[selectedPlayerId].anchored = false;
+                gameCueBallLogics[player][selectedCueBallIds[player]].anchored = false;
                 break;
         }
     }
