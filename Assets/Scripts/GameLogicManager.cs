@@ -23,13 +23,14 @@ public class GameLogicManager : NetworkBehaviour
 
     // Use this for initialization
     void Start () {
+        Vector2 spawnPosition;
         if (!isServer) return;
         canvas = GetComponentInParent<Canvas>();
         for (int i = 0; i < numPlayers; i++)
         {
             GameObject cueBall = (GameObject)Instantiate((Object)cueBallPrefab, new Vector3(0, 0, 0), Quaternion.identity);
             cueBall.transform.SetParent(canvas.transform);
-            Vector2 spawnPosition = new Vector2(0,0);
+            spawnPosition = new Vector2(0,0);
             cueBall.transform.localPosition = spawnPosition;
             CueBallLogic cueBallLogic = cueBall.GetComponent<CueBallLogic>();
             cueBallLogic.id = i;
@@ -44,11 +45,16 @@ public class GameLogicManager : NetworkBehaviour
             AnchorLogic anchorLogic = anchor.GetComponent<AnchorLogic>();
             anchorLogic.id = i;
             anchor.transform.SetParent(canvas.transform);
-            Vector2 spawnPosition = new Vector2(Random.Range(-500 * anchorEdgeFactor, 500 * anchorEdgeFactor), Random.Range(-250 * anchorEdgeFactor, 250 * anchorEdgeFactor));
+            spawnPosition = new Vector2(Random.Range(-500 * anchorEdgeFactor, 500 * anchorEdgeFactor), Random.Range(-250 * anchorEdgeFactor, 250 * anchorEdgeFactor));
             anchor.transform.localPosition = spawnPosition;
             anchors.Add(anchor);
             NetworkServer.Spawn(anchor);
         }
+        GameObject goalBall = Instantiate(Resources.Load("Prefabs/Ball")) as GameObject;
+        goalBall.transform.SetParent(canvas.transform);
+        spawnPosition = new Vector2(200, 0);
+        goalBall.transform.localPosition = spawnPosition;
+        NetworkServer.Spawn(goalBall);
     }
 
     public void setCurrentAnchor(int id)

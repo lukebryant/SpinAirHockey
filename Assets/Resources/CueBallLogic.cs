@@ -45,7 +45,7 @@ public class CueBallLogic : MonoBehaviour {
 			if (cross.z > 0)
 				angle = 0 - angle;
 			clockwise = true ? angle > 0 : false;
-			print ("perpVector = " + perpVector + "differenceVector + " + differenceVector + "angle = " + angle);
+    
 		}
 	}
 
