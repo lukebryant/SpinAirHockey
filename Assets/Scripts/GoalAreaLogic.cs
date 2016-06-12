@@ -17,6 +17,6 @@ public class GoalAreaLogic : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        print("GOOAALLALLALDLA");
+        if(other.gameObject.CompareTag("GoalBall")) print("GOOAALLALLALDLA");
     }
 }
