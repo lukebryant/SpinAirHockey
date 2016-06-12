@@ -20,7 +20,6 @@ public class GoalAreaLogic : MonoBehaviour {
     {
         if (other.gameObject.CompareTag("GoalBall"))
         {
-            print("goal");
             gameLogicManager.incrementScore(rightGoal);
         }
     }

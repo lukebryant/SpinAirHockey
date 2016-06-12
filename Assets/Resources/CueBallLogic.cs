@@ -71,6 +71,5 @@ public class CueBallLogic : MonoBehaviour {
 			angle = 0 - angle;
 		clockwise = angle > 0;
         newAnchor = true;
-        print(clockwise ? "clockwise" : "anticlockwise");
 	}
 }

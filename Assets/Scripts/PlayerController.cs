@@ -19,7 +19,6 @@ public class PlayerController : NetworkBehaviour
             foreach (GameObject spinAnchor in spinAnchorList)
             {
                 spinAnchor.GetComponent<AnchorLogic>().givePlayerControllerReference(this);
-                print("playerId = " + playerId);
             }
         }
     }
@@ -44,7 +43,6 @@ public class PlayerController : NetworkBehaviour
     public void CmdSetCurrentAnchor(int id, int sentPlayerId)
     {
         gameLogicManager.setCurrentAnchor(id, sentPlayerId);
-        print("Setting anchor: " + "id" + " = " + id + ", " + "playerId" + "= " + sentPlayerId);
     }
 
     public int getPlayerId() { return playerId; }

@@ -84,7 +84,6 @@ public class GameLogicManager : NetworkBehaviour
     void setActiveCueBall(int id, int player)
     {
         selectedCueBallIds[player] = id;
-        print("selectedCueBallIds[" + player + "] = " + id);
     }
 
     public void incrementScore(bool rightGoal)
