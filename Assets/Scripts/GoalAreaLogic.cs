@@ -4,7 +4,8 @@ using System.Collections;
 public class GoalAreaLogic : MonoBehaviour {
     [SerializeField]
     private bool rightGoal;
-
+    [SerializeField]
+    private GameLogicManager gameLogicManager;
 	// Use this for initialization
 	void Start () {
 	
@@ -17,6 +18,10 @@ public class GoalAreaLogic : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.CompareTag("GoalBall")) print("GOOAALLALLALDLA");
+        if (other.gameObject.CompareTag("GoalBall"))
+        {
+            print("goal");
+            gameLogicManager.incrementScore(rightGoal);
+        }
     }
 }

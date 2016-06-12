@@ -14,6 +14,10 @@ public class GameLogicManager : NetworkBehaviour
     private const int numAnchors = 10;
     [SerializeField]
     private float anchorEdgeFactor = 0.6f; //
+    [SerializeField]
+    private Text scoreText;
+    private int leftScore = 0;
+    private int rightScore = 0;
     private static int numPlayers = 2;
     private List<GameObject> anchors = new List<GameObject>();
     private List<GameObject>[] gameCueBalls = new List<GameObject>[numPlayers];  //Array of all the lists of cueBalls in the game where gameCueBalls[0] is a list of player 0's cueBalls
@@ -81,6 +85,13 @@ public class GameLogicManager : NetworkBehaviour
     {
         selectedCueBallIds[player] = id;
         print("selectedCueBallIds[" + player + "] = " + id);
+    }
+
+    public void incrementScore(bool rightGoal)
+    {
+        if (rightGoal) leftScore++;
+        else rightScore++;
+        scoreText.text = leftScore + " - " + rightScore;
     }
 
     public void Input(InputType inputType, int player)
