@@ -36,7 +36,7 @@ public class PlayerController : NetworkBehaviour
     [Command]
     void CmdSendInput(InputType inputType, int sentPlayerId)
     {
-        gameLogicManager.Input(inputType, sentPlayerId);
+        gameLogicManager.KeyBoardInput(inputType, sentPlayerId);
     }
 
     [Command]

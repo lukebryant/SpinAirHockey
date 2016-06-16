@@ -13,21 +13,27 @@ public class CueBallLogic : MonoBehaviour {
     private double currentAnchorDistance;
     private bool clockwise;
     private bool newAnchor = false;
-	public int id;
+    private Canvas canvas;
+    private GameObject arrow;
+    private RectTransform arrowRectTransform;
+    public int id;
     public bool anchored = false;
 
 	// Use this for initialization
 	void Start () {
         if (GetComponentInParent<Canvas>() == null)      //Spawned objects aren't put on the canvas, so this will happen on clients
         {
-            this.transform.SetParent(GameObject.Find("Canvas").transform);
+            canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+            this.transform.SetParent(canvas.transform);
         }
+        else canvas = this.GetComponentInParent<Canvas>();
         rigidBody2d = GetComponent<Rigidbody2D>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-	} 
+        if(anchored)DrawArrow(anchorTransform.localPosition, this.gameObject.transform.localPosition);
+    } 
 
     void FixedUpdate() { 
         float time = Time.fixedDeltaTime;
@@ -72,4 +78,20 @@ public class CueBallLogic : MonoBehaviour {
 		clockwise = angle > 0;
         newAnchor = true;
 	}
+    private void DrawArrow(Vector2 arrowStart, Vector2 canvasPosition)
+    {
+        if (arrow == null)
+        {
+            arrow = Instantiate(Resources.Load("Prefabs/TutorialArrow", typeof(GameObject))) as GameObject;
+            arrow.transform.SetParent(canvas.transform);
+            arrowRectTransform = (RectTransform)arrow.transform;
+            arrowRectTransform.localScale = new Vector3(1, 1, 1);
+        }
+        float angle = Mathf.Atan2(canvasPosition.y - arrowStart.y, canvasPosition.x - arrowStart.x) * 180 / Mathf.PI;
+        //arrow.transform.localScale = new Vector3((canvasPosition - arrowStart).magnitude/500, 1, 1);
+        arrowRectTransform.offsetMin = new Vector2(0, 0);
+        arrowRectTransform.offsetMax = new Vector2((canvasPosition - arrowStart).magnitude, 5);
+        arrow.transform.localPosition = canvasPosition - ((canvasPosition - arrowStart) / 2);
+        arrow.transform.localRotation = Quaternion.Euler(0, 0, angle);
+    }
 }

@@ -22,6 +22,7 @@ public class GameLogicManager : NetworkBehaviour
     private List<GameObject> anchors = new List<GameObject>();
     private List<GameObject>[] gameCueBalls = new List<GameObject>[numPlayers];  //Array of all the lists of cueBalls in the game where gameCueBalls[0] is a list of player 0's cueBalls
     private List<CueBallLogic>[] gameCueBallLogics = new List<CueBallLogic>[numPlayers];
+    private List<GameObject> tutorialArrowList = new List<GameObject>();
     private int[] selectedCueBallIds = {0,0};     //Player n's selected cueBall
     private Canvas canvas;
 
@@ -35,7 +36,7 @@ public class GameLogicManager : NetworkBehaviour
         {
             gameCueBalls[j] = new List<GameObject>();
             gameCueBallLogics[j] = new List<CueBallLogic>();
-            Color newColor = j == 0 ? Color.green : Color.yellow;
+            Color newColor = j == 0 ? new Color(0,1,0,0.6f) : new Color(0,0.92f,0.016f,0.6f);
             for (int i = 0; i < numCueBallsPerPlayer; i++)
             {
                 GameObject cueBall = (GameObject)Instantiate((Object)cueBallPrefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -81,6 +82,7 @@ public class GameLogicManager : NetworkBehaviour
         if (Input.GetKeyDown("2")) setActiveCueBall(2);
         if (Input.GetKeyDown("3")) setActiveCueBall(3);
         if (Input.GetMouseButtonDown(1)) cueBallLogics[selectedPlayerId].anchored = false;*/
+        //if (Input.GetKeyDown("a")) DrawArrow(new Vector2(0, 0), new Vector2(93.23409f, 59.01002));
     }
 
     void setActiveCueBall(int id, int player)
@@ -95,9 +97,10 @@ public class GameLogicManager : NetworkBehaviour
         scoreText.text = leftScore + " - " + rightScore;
     }
 
-    public void Input(InputType inputType, int player)
+    public void KeyBoardInput(InputType inputType, int player)
     {
-        switch(inputType){
+        switch (inputType)
+        {
             case InputType.N0:
                 setActiveCueBall(0, player);
                 break;
@@ -114,5 +117,21 @@ public class GameLogicManager : NetworkBehaviour
                 gameCueBallLogics[player][selectedCueBallIds[player]].anchored = false;
                 break;
         }
+    }
+
+    private void DrawArrow(Vector2 arrowStart, Vector2 canvasPosition)
+    {
+        RectTransform arrowRectTransform;
+        GameObject arrow = Instantiate(Resources.Load("Prefabs/TutorialArrow", typeof(GameObject))) as GameObject;
+        tutorialArrowList.Add(arrow);
+        arrow.transform.SetParent(canvas.transform);
+        float angle = Mathf.Atan2(canvasPosition.y - arrowStart.y, canvasPosition.x - arrowStart.x) * 180 / Mathf.PI;
+        //arrow.transform.localScale = new Vector3((canvasPosition - arrowStart).magnitude/500, 1, 1);
+        arrowRectTransform = (RectTransform)arrow.transform;
+        arrowRectTransform.offsetMin = new Vector2(0, 0);
+        arrowRectTransform.offsetMax = new Vector2((canvasPosition - arrowStart).magnitude, 5);
+        arrowRectTransform.localScale = new Vector3(1, 1, 1);
+        arrow.transform.localPosition = canvasPosition - ((canvasPosition - arrowStart) / 2);
+        arrow.transform.Rotate(0, 0, angle);
     }
 }
