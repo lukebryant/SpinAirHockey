@@ -36,7 +36,7 @@ public class GameLogicManager : NetworkBehaviour
         {
             gameCueBalls[j] = new List<GameObject>();
             gameCueBallLogics[j] = new List<CueBallLogic>();
-            Color newColor = j == 0 ? new Color(0,1,0,0.6f) : new Color(0,0.92f,0.016f,0.6f);
+            Color newColor = j == 0 ? new Color(0,1,0,0.3f) : new Color(1,0.92f,0.016f,0.3f);
             for (int i = 0; i < numCueBallsPerPlayer; i++)
             {
                 GameObject cueBall = (GameObject)Instantiate((Object)cueBallPrefab, new Vector3(0, 0, 0), Quaternion.identity);

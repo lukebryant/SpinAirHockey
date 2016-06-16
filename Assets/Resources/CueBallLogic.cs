@@ -82,7 +82,7 @@ public class CueBallLogic : MonoBehaviour {
     {
         if (arrow == null)
         {
-            arrow = Instantiate(Resources.Load("Prefabs/TutorialArrow", typeof(GameObject))) as GameObject;
+            arrow = Instantiate(Resources.Load("Prefabs/ConnectorLine", typeof(GameObject))) as GameObject;
             arrow.transform.SetParent(canvas.transform);
             arrowRectTransform = (RectTransform)arrow.transform;
             arrowRectTransform.localScale = new Vector3(1, 1, 1);
