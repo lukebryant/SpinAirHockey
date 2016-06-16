@@ -35,6 +35,7 @@ public class GameLogicManager : NetworkBehaviour
         {
             gameCueBalls[j] = new List<GameObject>();
             gameCueBallLogics[j] = new List<CueBallLogic>();
+            Color newColor = j == 0 ? Color.green : Color.yellow;
             for (int i = 0; i < numCueBallsPerPlayer; i++)
             {
                 GameObject cueBall = (GameObject)Instantiate((Object)cueBallPrefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -43,6 +44,7 @@ public class GameLogicManager : NetworkBehaviour
                 cueBall.transform.localPosition = spawnPosition;
                 CueBallLogic cueBallLogic = cueBall.GetComponent<CueBallLogic>();
                 cueBallLogic.id = i;
+                cueBall.GetComponentInChildren<Image>().color = newColor;
                 cueBall.GetComponentInChildren<Text>().text = i.ToString();
                 gameCueBalls[j].Add(cueBall);
                 gameCueBallLogics[j].Add(cueBallLogic);
