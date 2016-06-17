@@ -46,7 +46,8 @@ public class GameLogicManager : NetworkBehaviour
                 CueBallLogic cueBallLogic = cueBall.GetComponent<CueBallLogic>();
                 cueBallLogic.id = i;
                 cueBall.GetComponentInChildren<Image>().color = newColor;
-                cueBall.GetComponentInChildren<Text>().text = i.ToString();
+                cueBall.GetComponent<Text>().text = i.ToString();
+                cueBallLogic.color = newColor;
                 gameCueBalls[j].Add(cueBall);
                 gameCueBallLogics[j].Add(cueBallLogic);
                 NetworkServer.Spawn(cueBall);

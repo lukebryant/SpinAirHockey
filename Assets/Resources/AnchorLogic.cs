@@ -17,6 +17,7 @@ public class AnchorLogic : NetworkBehaviour {
         {
             this.transform.SetParent(GameObject.Find("Canvas").transform);
         }
+        if (!isServer) print("id = " + id);
     }
 	
 	// Update is called once per frame

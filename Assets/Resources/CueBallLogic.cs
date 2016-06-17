@@ -1,9 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class CueBallLogic : MonoBehaviour {
-	public List<GameObject> anchors = new List<GameObject> ();
+public class CueBallLogic : NetworkBehaviour {
+    [SyncVar]
+    public int id;
+    [SyncVar]
+    public Color color;
+    [SyncVar]
+    public bool anchored;
+    [SyncVar]
+    public int anchordId;
+    public List<GameObject> anchors = new List<GameObject> ();
 	private Image circleImage;
 	private Transform anchorTransform;
     private Rigidbody2D rigidBody2d;
@@ -16,8 +25,7 @@ public class CueBallLogic : MonoBehaviour {
     private Canvas canvas;
     private GameObject arrow;
     private RectTransform arrowRectTransform;
-    public int id;
-    public bool anchored = false;
+    private bool printOnce = false;
 
 	// Use this for initialization
 	void Start () {
@@ -28,34 +36,44 @@ public class CueBallLogic : MonoBehaviour {
         }
         else canvas = this.GetComponentInParent<Canvas>();
         rigidBody2d = GetComponent<Rigidbody2D>();
+        this.gameObject.GetComponentInChildren<Image>().color = color;
+        this.gameObject.GetComponent<Text>().text = id.ToString();
+        /*if (!isServer)
+        {
+            print("id = " + id);
+        }*/
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if(anchored)DrawArrow(anchorTransform.localPosition, this.gameObject.transform.localPosition);
+
+    // Update is called once per frame
+    void Update () {
+        if (anchored) DrawArrow(anchorTransform.localPosition, this.gameObject.transform.localPosition);
+        else DrawArrow(Vector2.zero, Vector2.zero);
     } 
 
-    void FixedUpdate() { 
-        float time = Time.fixedDeltaTime;
-        if (anchorTransform == null || !anchored) return;
-        if (newAnchor)
+    void FixedUpdate() {
+        if (isServer)
         {
-            differenceVector = anchorTransform.position - this.transform.position;
-            perpVector = new Vector2(-differenceVector.y, differenceVector.x);
-            perpVector.Normalize();
-            perpVector.Scale(scaleVector);
-            if (!clockwise)
-                perpVector *= -1;
-            rigidBody2d.velocity = (Vector3)perpVector;
-            newAnchor = false;
-            currentAnchorDistance = Vector3.Magnitude(differenceVector);
-        }
-        else
-        {
-            double circumference = currentAnchorDistance * 2 * Mathf.PI;
-            double orbitTime = circumference / Vector3.Magnitude(rigidBody2d.velocity);
-            double angleRotation = (clockwise ? -1 : 1) * 360 * (Time.fixedDeltaTime / orbitTime);
-            rigidBody2d.velocity = Quaternion.Euler(0, 0, (float)angleRotation) * rigidBody2d.velocity;
+            float time = Time.fixedDeltaTime;
+            if (anchorTransform == null || !anchored) return;
+            if (newAnchor)
+            {
+                differenceVector = anchorTransform.position - this.transform.position;
+                perpVector = new Vector2(-differenceVector.y, differenceVector.x);
+                perpVector.Normalize();
+                perpVector.Scale(scaleVector);
+                if (!clockwise)
+                    perpVector *= -1;
+                rigidBody2d.velocity = (Vector3)perpVector;
+                newAnchor = false;
+                currentAnchorDistance = Vector3.Magnitude(differenceVector);
+            }
+            else
+            {
+                double circumference = currentAnchorDistance * 2 * Mathf.PI;
+                double orbitTime = circumference / Vector3.Magnitude(rigidBody2d.velocity);
+                double angleRotation = (clockwise ? -1 : 1) * 360 * (Time.fixedDeltaTime / orbitTime);
+                rigidBody2d.velocity = Quaternion.Euler(0, 0, (float)angleRotation) * rigidBody2d.velocity;
+            }
         }
     }
 
@@ -78,6 +96,7 @@ public class CueBallLogic : MonoBehaviour {
 		clockwise = angle > 0;
         newAnchor = true;
 	}
+
     private void DrawArrow(Vector2 arrowStart, Vector2 canvasPosition)
     {
         if (arrow == null)
