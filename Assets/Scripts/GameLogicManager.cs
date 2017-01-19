@@ -29,6 +29,7 @@ public class GameLogicManager : NetworkBehaviour
 
     // Use this for initialization
     void Start () {
+        Screen.SetResolution(1280, 768, false);
         Vector2 spawnPosition;
         if (!isServer) return;
         canvas = GetComponentInParent<Canvas>();
